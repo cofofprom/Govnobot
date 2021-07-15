@@ -1,1 +1,1 @@
-web: python3 insectoid_analys.py
+govno: python3 insectoid_analys.py
