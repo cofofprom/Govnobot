@@ -1,6 +1,5 @@
 from time import sleep
 from vk_api import VkApi
-from vk_api.audio import VkAudio
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.exceptions import *
 from collections import Counter
