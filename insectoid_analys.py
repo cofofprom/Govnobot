@@ -7,6 +7,10 @@ from os import environ
 
 TOKEN = environ["TOKEN"]
 TOPCOUNT = int(environ.get("TOPCOUNT", 10))
+print(f"token = {TOKEN}")
+print(f"topcount = {TOPCOUNT}")
+print(f"login = {environ['LOGIN']}")
+print(f"password = {environ['PASSWORD']}")
 
 def parseRawArtists(astr):
     clearnames = []
