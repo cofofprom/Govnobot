@@ -8,7 +8,7 @@ from os import environ
 TOPCOUNT = 10
 try:
     with open("topcount.dat", "rb") as f:
-        TOPCOUNT = f.read(1)
+        TOPCOUNT = int(f.read(1)[0])
 except:
     pass
 TOKEN = environ["TOKEN"]
@@ -83,8 +83,14 @@ def processUser(api, user):
     printPerson("Top %d artists of %s:" % (TOPCOUNT, user['first_name']))
     printstring = ""
     for i, item in enumerate(c.most_common(TOPCOUNT)):
-        printstring += " ".join(map(str, (i+1, item[0], '->', item[1], 'audios'))) + '\n'
-    printPerson(printstring)
+        printstring_line = " ".join(map(str, (i+1, item[0], '->', item[1], 'audios'))) + '\n'
+        if len(printstring + printstring_line) >= 9000:
+            printPerson(printstring)
+            printstring = ""
+        else:
+            printstring += printstring_line
+    if printstring != "":
+        printPerson(printstring)
     print("DONE")
 
 gapi = VkApi(token=TOKEN, app_id=6626402)
@@ -106,6 +112,7 @@ for event in longpoll.listen():
                 TOPCOUNT = int(rawtext.split(' ')[1])
                 with open('topcount.dat', 'wb') as f:
                     f.write(bytes([TOPCOUNT]))
+                printPerson("Буду выдавать по %d исполнителей" % TOPCOUNT)
             except:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
