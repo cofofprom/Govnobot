@@ -105,18 +105,18 @@ for event in longpoll.listen():
             try:
                 TOPCOUNT = int(rawtext.split(' ')[1])
                 with open('topcount.dat', 'wb') as f:
-                    f.write(TOPCOUNT)
+                    f.write(bytes([TOPCOUNT]))
             except:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
                 with open('topcount.dat', 'wb') as f:
-                    f.write(TOPCOUNT)
+                    f.write(bytes([TOPCOUNT]))
                 continue
             if TOPCOUNT <= 0:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
                 with open('topcount.dat', 'wb') as f:
-                    f.write(TOPCOUNT)
+                    f.write(bytes([TOPCOUNT]))
             continue
         if not "vk.com" in rawtext:
             printPerson("Скинь мне ссылку на страницу чела!!!")
