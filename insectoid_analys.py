@@ -83,6 +83,7 @@ def processUser(api, user):
 gapi = VkApi(token=TOKEN, app_id=6626402)
 api = VkApi(login=environ['LOGIN'], password=environ['PASSWORD'], app_id=6121396, captcha_handler=captcha)
 api.auth()
+print("LOGGED IN")
 longpoll = VkBotLongPoll(gapi, '149861818')
 
 for event in longpoll.listen():
