@@ -84,7 +84,7 @@ def processUser(api, user):
     printstring = ""
     for i, item in enumerate(c.most_common(TOPCOUNT)):
         printstring_line = " ".join(map(str, (i+1, item[0], '->', item[1], 'audios'))) + '\n'
-        if len(printstring + printstring_line) >= 9000:
+        if len(printstring + printstring_line) >= 8000:
             printPerson(printstring)
             printstring = ""
         else:
