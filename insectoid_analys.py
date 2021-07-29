@@ -5,8 +5,13 @@ from collections import Counter
 from random import randint
 from os import environ
 
+TOPCOUNT = 10
+try:
+    with open("topcount.dat", "rb") as f:
+        TOPCOUNT = f.read(1)
+except:
+    pass
 TOKEN = environ["TOKEN"]
-TOPCOUNT = int(environ.get("TOPCOUNT", 10))
 VKTOKEN = environ.get('VKTOKEN')
 print(f"token = {TOKEN}")
 print(f"topcount = {TOPCOUNT}")
@@ -99,16 +104,19 @@ for event in longpoll.listen():
         if 'setup' in rawtext.lower():
             try:
                 TOPCOUNT = int(rawtext.split(' ')[1])
-                environ['TOPCOUNT'] = str(TOPCOUNT)
+                with open('topcount.dat', 'wb') as f:
+                    f.write(TOPCOUNT)
             except:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
-                environ['TOPCOUNT'] = str(TOPCOUNT)
+                with open('topcount.dat', 'wb') as f:
+                    f.write(TOPCOUNT)
                 continue
             if TOPCOUNT <= 0:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
-                environ['TOPCOUNT'] = str(TOPCOUNT)
+                with open('topcount.dat', 'wb') as f:
+                    f.write(TOPCOUNT)
             continue
         if not "vk.com" in rawtext:
             printPerson("Скинь мне ссылку на страницу чела!!!")
