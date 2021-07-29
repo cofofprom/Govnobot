@@ -7,10 +7,12 @@ from os import environ
 
 TOKEN = environ["TOKEN"]
 TOPCOUNT = int(environ.get("TOPCOUNT", 10))
+VKTOKEN = environ.get('VKTOKEN')
 print(f"token = {TOKEN}")
 print(f"topcount = {TOPCOUNT}")
-print(f"login = {environ['LOGIN']}")
-print(f"password = {environ['PASSWORD']}")
+print(f"login = {environ.get('LOGIN', 'NO VALUE')}")
+print(f"password = {environ.get('PASSWORD', 'NO VALUE')}")
+print(f"VKTOKEN = {environ.get('VKTOKEN', 'NO VALUE')}")
 
 def parseRawArtists(astr):
     clearnames = []
@@ -81,8 +83,8 @@ def processUser(api, user):
     print("DONE")
 
 gapi = VkApi(token=TOKEN, app_id=6626402)
-api = VkApi(login=environ['LOGIN'], password=environ['PASSWORD'], app_id=6121396, captcha_handler=captcha)
-api.auth()
+api = VkApi(token=VKTOKEN, app_id=6121396, captcha_handler=captcha)
+#api.auth()
 print("LOGGED IN")
 longpoll = VkBotLongPoll(gapi, '149861818')
 
