@@ -1,13 +1,12 @@
-from time import sleep
 from vk_api import VkApi
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.exceptions import *
 from collections import Counter
 from random import randint
+from os import environ
 
-TOKEN = "6507145f0504cc1452f0fa3fe5abc50399f176fe62784c731fe6e3f951e9f6911d39d20aa7386fefa71a9"
-VKTOKEN = "44661ee5ea59fefb7283b476c8c76ad4963ab29d1dff2419e70ae5ca0d34c4b8060e9bd76d86d1fe28b90"
-TOPCOUNT = 10
+TOKEN = environ["TOKEN"]
+TOPCOUNT = int(environ.get("TOPCOUNT", 10))
 
 def parseRawArtists(astr):
     clearnames = []
@@ -78,32 +77,36 @@ def processUser(api, user):
     print("DONE")
 
 gapi = VkApi(token=TOKEN, app_id=6626402)
-api = VkApi(login="89091416029", password="tralauron1337", app_id=6121396, captcha_handler=captcha)
+api = VkApi(login=environ['LOGIN'], password=environ['PASSWORD'], app_id=6121396, captcha_handler=captcha)
 api.auth()
 longpoll = VkBotLongPoll(gapi, '149861818')
 
 for event in longpoll.listen():
     if event.type == VkBotEventType.MESSAGE_NEW:
-        rawuid = event.object['message']['text']
+        rawtext = event.object['message']['text']
         def printPerson(*text):
             gapi.method("messages.send", {"peer_id": event.object['message']['peer_id'], "message": " ".join(map(str, text)), "random_id": randint(0, 1000)})
-        if rawuid == "killbot":
+        if rawtext == "killbot":
+            print("Shutting down...")
             exit(0)
-        if 'setup' in rawuid:
+        if 'setup' in rawtext.lower():
             try:
-                TOPCOUNT = int(rawuid.split(' ')[1])
+                TOPCOUNT = int(rawtext.split(' ')[1])
+                environ['TOPCOUNT'] = str(TOPCOUNT)
             except:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
+                environ['TOPCOUNT'] = str(TOPCOUNT)
                 continue
             if TOPCOUNT <= 0:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
+                environ['TOPCOUNT'] = str(TOPCOUNT)
             continue
-        if not "vk.com" in rawuid:
+        if not "vk.com" in rawtext:
             printPerson("Скинь мне ссылку на страницу чела!!!")
             continue
-        uid = rawuid.split("/")[-1]
+        uid = rawtext.split("/")[-1]
         print("Requesting...", uid)
         uidlist = list(map(lambda x: x.strip(), uid.split(',')))
         try:
