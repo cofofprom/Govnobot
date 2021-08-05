@@ -6,11 +6,6 @@ from random import randint
 from os import environ
 
 TOPCOUNT = 10
-try:
-    with open("topcount.dat", "rb") as f:
-        TOPCOUNT = int(f.read(1)[0])
-except:
-    pass
 TOKEN = environ["TOKEN"]
 VKTOKEN = environ.get('VKTOKEN')
 print(f"token = {TOKEN}")
@@ -84,7 +79,7 @@ def processUser(api, user):
     printstring = ""
     for i, item in enumerate(c.most_common(TOPCOUNT)):
         printstring_line = " ".join(map(str, (i+1, item[0], '->', item[1], 'audios'))) + '\n'
-        if len(printstring + printstring_line) >= 8000:
+        if len(printstring + printstring_line) >= 4000:
             printPerson(printstring)
             printstring = ""
         else:
@@ -110,20 +105,13 @@ for event in longpoll.listen():
         if 'setup' in rawtext.lower():
             try:
                 TOPCOUNT = int(rawtext.split(' ')[1])
-                with open('topcount.dat', 'wb') as f:
-                    f.write(bytes([TOPCOUNT]))
                 printPerson("Буду выдавать по %d исполнителей" % TOPCOUNT)
             except:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
-                with open('topcount.dat', 'wb') as f:
-                    f.write(bytes([TOPCOUNT]))
-                continue
             if TOPCOUNT <= 0:
                 printPerson("Число может быть только положительным")
                 TOPCOUNT = 10
-                with open('topcount.dat', 'wb') as f:
-                    f.write(bytes([TOPCOUNT]))
             continue
         if not "vk.com" in rawtext:
             printPerson("Скинь мне ссылку на страницу чела!!!")
